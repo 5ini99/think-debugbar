@@ -10,7 +10,10 @@ class Service extends \think\Service
 {
     public function boot()
     {
-        $this->app->middleware->add(InjectDebugbar::class);
+        // 当非 ajax 请求环境时开启调试信息追加【byron sampson 2019-11-04】
+        if (!$this->app->request->isAjax()) {
+            $this->app->middleware->add(InjectDebugbar::class);
+        }
         $this->registerRoutes(function (Route $route) {
             $route->get("debugbar/:path", AssetController::class . "@index")->pattern(['path' => '[\w\.\/\-_]+']);
         });
